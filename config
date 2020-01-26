@@ -1,0 +1,161 @@
+1- iniciar el node y con la -y se crea el package json
+npm init -y
+
+2- Crear carpeta src donde va a estar todo el contenido de la aplicación
+
+3- Crear carpeta public donde van a estar todos los archivos publicos de la aplicacion
+
+4- Crear carpeta components donde van a estar los componentes
+
+5- Crear un src/index.js que va a ser el archivo de entrada de nuestro proyecto
+
+6- Crear un public/index.html que va a ser la salida de html de nuestra aplicacion cuando se compile
+
+7- Instalar react: npm install react react-dom
+
+8- Creamos un componente src/components/HelloWorld.jsx y insertamos este codigo:
+--------------------------
+import React from 'react'
+
+const HelloWorld = () => <h1>Hola Mundo</h1>
+
+export default HelloWorld;
+--------------------------
+
+9- Crear archivo principal en src/index.js y insertar este codigo:
+---------------------------
+import React from 'react';
+import ReactDOM from 'react-dom';
+import HelloWorld from './components/HelloWorld'
+
+ReactDOM.render(<HelloWorld/>, document.getElementById('app'))
+---------------------------
+
+10- En nuestro public/index.html poner este codigo:
+------------------------------
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Base</title>
+</head>
+<body>
+    <div id="app"></div>
+</body>
+</html>
+------------------------------
+
+11- Instalar babel poniendo: 
+npm install @babel/core babel-loader @babel/preset-env @babel/preset-react --save-dev
+
+12- Crear archivo .babelrc
+
+13- Poner los presets en .babelrc
+--------------------------------
+{
+    "presets": [
+        "@babel/preset-env",
+        "@babel/preset-react"
+    ]
+}
+-------------------------------
+
+14- Instalar webpack y html loaders: 
+npm install webpack webpack-cli html-webpack-plugin html-loader --save-dev
+
+15- Crear el webpack.config.js
+
+16- Requerir el path y el html plugin
+--------------------------------------
+const path = require('path');
+const HtmlWebPackPlugin = require('html-webpack-plugin')
+--------------------------------------
+
+17- Creamos el module exports dentro de webpack.config.js que va a ser toda la configuración de webpack 
+-----------------------------------------
+module.exports = {
+    entry: './src/index.js',
+    output: {
+        path: path.resolve(__dirname,'dist'),
+        filename: 'bundle.js'
+    },
+    resolve: {
+        extensions: ['.js', '.jsx']
+    },
+    module: {
+        rules: [
+            {
+                test: /\.(js|jsx)$/,
+                exclude: /node-modules/,
+                use: {
+                    loader: "babel-loader"
+                }
+            },
+            {
+                test: /\.html$/,
+                use: [
+                    {
+                        loader: 'html-loader'
+                    }
+                ]
+            }
+        ]
+    },
+    plugins: [
+        new HtmlWebPackPlugin({
+            template: './public/index.html',
+            filename: './index.html'
+        }),
+    ]
+}
+-------------------------------------------
+
+18- Crear un nuevo script en package.json para correr la aplicación: 
+"build": "webpack --mode production"
+
+19- Instalar webpack-dev-server 
+webpack-dev-server --save-dev
+
+20- Crear el script para que abra el servidor local
+"start": "webpack-dev-server --open --mode development"
+
+21- Instalar css plugin y añadir css loader y compatiblidad con sass
+npm install mini-css-extract-plugin css-loader node-sass sass-loader --save-dev
+
+22- Configurar reglas de css y sass en webpack.config.js, poner en rules:
+---------------------------------
+            {
+                test: /\.(s*)css$/,
+                use: [
+                    {
+                        loader: MiniCssExtractPlugin.loader, 
+                    },
+                    'css-loader',
+                    'sass-loader'
+                ]
+            }
+--------------------------------
+
+23- Requerir el css plugin
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+
+24- Añadirlos en plugins: [] en webpack.config.js
+------------------------------------------
+        new MiniCssExtractPlugin({
+            filename: 'assets/[name].css'
+        })
+------------------------------------------
+
+25- Crear carpeta src/assets y dentro otra carpeta llamada styles y ahi podemos crear archivos sass
+
+26- Crear el src/assets/styles/App.scss
+
+27- Llamar el scss desde HelloWorld.js
+import '../assets/styles/App.scss';
+
+28- Instalar eslint que es una herramienta de buenas prácticas
+npm install eslint babel-eslint eslint-config-airbnb eslint-plugin-import eslint-plugin-react eslint-plugin-jsx-a11y
+
+29- Crear archivo de configuracion .eslintrc
